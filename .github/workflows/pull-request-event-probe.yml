@@ -1,0 +1,23 @@
+name: Pull request event probe
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  event-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record pull request event
+        env:
+          ACTION: ${{ github.event.action }}
+          AFTER_SHA: ${{ github.event.after }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          echo "event=$EVENT_NAME action=$ACTION"
+          echo "before=$BEFORE_SHA after=$AFTER_SHA"
+          echo "base=$BASE_SHA head=$HEAD_SHA workflow=$WORKFLOW_SHA"
